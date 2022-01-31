@@ -163,7 +163,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
 
         pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, 3, pendingIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
     }
 
     private void addToDB(String name, String time, String date, boolean status) {

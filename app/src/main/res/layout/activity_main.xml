@@ -1,53 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefreshLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomePage.MainActivity">
-
-    <TextView
-        android:id="@+id/home_heading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_heading"
-        android:textColor="@color/holobluedark"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_margin="16dp"
-        android:fontFamily="sans-serif-light"/>
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:visibility="gone"
-        android:id="@+id/lottie_empty"
+    android:layout_height="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="empty.json"
-        app:lottie_loop="true"
-        android:layout_centerInParent="true"
-        app:lottie_speed="1"/>
+        android:layout_height="match_parent"
+        tools:context=".HomePage.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/home_heading"
-        android:nestedScrollingEnabled="true"/>
+        <TextView
+            android:id="@+id/home_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_heading"
+            android:textColor="@color/holobluedark"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_margin="16dp"
+            android:fontFamily="sans-serif-light"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addTask_fab"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/holobluedark"
-        android:text="Add task"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
-        android:drawableLeft="@drawable/ic_baseline_add_24">
-    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 
-</RelativeLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:visibility="gone"
+            android:id="@+id/lottie_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="empty.json"
+            app:lottie_loop="true"
+            android:layout_centerInParent="true"
+            app:lottie_speed="1"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/task_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/home_heading"
+            android:nestedScrollingEnabled="true"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addTask_fab"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/holobluedark"
+            android:text="Add task"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:drawableLeft="@drawable/ic_baseline_add_24">
+        </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

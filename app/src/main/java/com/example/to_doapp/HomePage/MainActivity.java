@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
     static FirebaseUser user;
     private FirebaseAuth mAuth;
     public static LottieAnimationView animationView;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -76,6 +78,19 @@ public class MainActivity extends AppCompatActivity{
         Collections.reverse(taskList);
         taskAdapter.setTasks(taskList);
         taskAdapter.notifyDataSetChanged();
+
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                taskList = addTasks();
+                Collections.reverse(taskList);
+                taskAdapter.setTasks(taskList);
+                taskAdapter.notifyDataSetChanged();
+                taskRecyclerView.setAdapter(taskAdapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

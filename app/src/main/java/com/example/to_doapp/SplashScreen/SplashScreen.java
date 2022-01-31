@@ -30,6 +30,7 @@ public class SplashScreen extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
+        // If user is already authenticated
         if(user != null)
             goToMainActivity();
         else

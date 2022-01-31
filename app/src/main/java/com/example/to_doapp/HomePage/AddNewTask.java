@@ -76,6 +76,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         final String[] utime = new String[1];
         final String[] udate = new String[1];
 
+        // Date Picker
         taskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +98,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 datePickerDialog.show();
             }
         });
+        // Time Picker
         taskTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +118,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
             }
         });
 
+        // Save the new task -> Set Alarm + Add task to DataBase
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +142,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         return view;
     }
 
+    // Set alarm when a task is added to the list
     private void setAlarm(String name, String date, String time) {
         Calendar cal = Calendar.getInstance();
         String[] d = date.split("\\.");
@@ -166,6 +170,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
     }
 
+    // Add Task to DataBase
     private void addToDB(String name, String time, String date, boolean status) {
         db = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
         String id = db.collection("tasks").document().getId();

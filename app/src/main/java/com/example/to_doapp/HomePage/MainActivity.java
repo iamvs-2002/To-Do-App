@@ -83,15 +83,19 @@ public class MainActivity extends AppCompatActivity{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                // Add the tasks again, so as to update
+                // The "UPCOMING" status for each task
                 taskList = addTasks();
                 Collections.reverse(taskList);
                 taskAdapter.setTasks(taskList);
                 taskAdapter.notifyDataSetChanged();
                 taskRecyclerView.setAdapter(taskAdapter);
+
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
 
+        // To add a new Task
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    // Channel to receieve alarm/updates for the tasks
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "taskReminder";
@@ -113,6 +118,8 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    // Add the tasks to the List, to be shown in RecyclerView
+    // By fetching the tasks from DataBase
     public static List<TaskModel> addTasks() {
         if(taskList!=null)
             taskList.clear();
@@ -122,8 +129,8 @@ public class MainActivity extends AppCompatActivity{
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            //`task.getResult()` is a list of documents
-                            // belonging to the collection = "users"
+                            // task.getResult() returns a list of documents
+                            // belonging to the collection = "tasks"
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = (String) document .get("id");
                                 String name = (String) document .get("name");

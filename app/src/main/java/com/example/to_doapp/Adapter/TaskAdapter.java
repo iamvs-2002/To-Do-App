@@ -158,6 +158,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             return (differenceInHours <= 1);
         }
     }
+
     public static String getCurrentDateTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
         String currentDateandTime = sdf.format(new Date());

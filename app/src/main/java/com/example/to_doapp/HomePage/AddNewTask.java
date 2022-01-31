@@ -139,19 +139,6 @@ public class AddNewTask extends BottomSheetDialogFragment {
         return view;
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "taskReminder";
-            String desc = "Channel to receive alarm for task";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("task", name, importance);
-            channel.setDescription(desc);
-
-            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
     private void setAlarm(String name, String date, String time) {
         Calendar cal = Calendar.getInstance();
         String[] d = date.split("\\.");

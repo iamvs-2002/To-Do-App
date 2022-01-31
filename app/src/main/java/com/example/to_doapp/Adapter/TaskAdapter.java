@@ -1,12 +1,13 @@
 package com.example.to_doapp.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.os.Bundle;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -16,14 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.to_doapp.HomePage.AddNewTask;
+import com.example.to_doapp.HomePage.AlarmReceiver;
 import com.example.to_doapp.HomePage.MainActivity;
 import com.example.to_doapp.Model.TaskModel;
 import com.example.to_doapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -74,11 +71,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         taskCheckBox.setText(taskModel.getName());
         taskDate.setText(taskModel.getDate());
         taskTime.setText(taskModel.getTime());
-        Boolean status = taskModel.getStatus();
-        taskCheckBox.setChecked(status);
+        final Boolean[] status = {taskModel.getStatus()};
+        taskCheckBox.setChecked(status[0]);
 
         try {
-            if (!status && checkTime(taskModel.getDate(), taskModel.getTime()))
+            if (!status[0] && checkTime(taskModel.getDate(), taskModel.getTime()))
                 taskStatus.setText(R.string.upcomingTask);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -100,12 +97,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 String time = taskModel.getTime();
 
                 if(isChecked){
-                    boolean status = true;
-                    updateDB(id,name,time,date,status);
+                    boolean s = true;
+                    status[0] = s;
+                    taskModel.setStatus(s);
+                    taskStatus.setText("");
+                    updateDB(id,name,time,date,s);
                 }
                 else{
-                    boolean status = false;
-                    updateDB(id,name,time,date,status);
+                    boolean s = false;
+                    status[0] = s;
+                    taskModel.setStatus(s);
+                    try {
+                        if (!status[0] && checkTime(taskModel.getDate(), taskModel.getTime())) {
+                            taskStatus.setText(R.string.upcomingTask);
+                            MainActivity.taskAdapter.notifyDataSetChanged();
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    updateDB(id,name,time,date,s);
                 }
             }
         });
@@ -117,15 +127,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         String cdate = s[0].trim();
         String ctime = s[1].trim();
 
-        // Toast.makeText(context, ctime+" "+time, Toast.LENGTH_SHORT).show();
+        SimpleDateFormat simpleDateFormat
+                = new SimpleDateFormat("dd.mm.yyyy");
+        Date d1 = simpleDateFormat.parse(cdate);
+        Date d2 = simpleDateFormat.parse(date);
 
-        if(date.equals(cdate)){
-            SimpleDateFormat simpleDateFormat
+        if(d1.after(d2)) {
+            return false;
+        }
+        else {
+            SimpleDateFormat simpleDateFormathr
                     = new SimpleDateFormat("HH:mm");
 
             // Parsing the Time Period
-            Date date1 = simpleDateFormat.parse(ctime);
-            Date date2 = simpleDateFormat.parse(time);
+            Date date1 = simpleDateFormathr.parse(ctime);
+            Date date2 = simpleDateFormathr.parse(time);
 
             if(date1.after(date2))
                 return false;
@@ -138,12 +154,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             long differenceInHours
                     = (differenceInMilliSeconds / (60 * 60 * 1000))
                     % 24;
-            Toast.makeText(context, String.valueOf(differenceInHours), Toast.LENGTH_SHORT).show();
 
             return (differenceInHours <= 1);
         }
-
-        return false;
     }
     public static String getCurrentDateTime(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
@@ -169,6 +182,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void deleteItem(int position) {
         TaskModel taskModel = taskList.get(position);
         String id = taskModel.getId();
+
+        cancelAlarm(taskModel.getDate(), taskModel.getTime());
+
         deleteItemFromDB(id);
         taskList.remove(position);
         notifyItemRemoved(position);
@@ -182,6 +198,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 .document(id)
                 .delete();
     }
+
+    private void cancelAlarm(String date, String time) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
+
+        if(pendingIntent != null) {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
     private void updateDB(String id, String name, String time, String date, boolean status) {
         db = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
         Map<String, Object> task = new HashMap<>();

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">To-Do App</string>
+    <string name="home_heading">All Tasks</string>
+    <string name="upcomingTask">Upcoming</string>
+</resources>

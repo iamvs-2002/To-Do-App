@@ -1,4 +1,4 @@
-package com.example.to_doapp;
+package com.example.to_doapp.SplashScreen;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.example.to_doapp.HomePage.MainActivity;
+import com.example.to_doapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

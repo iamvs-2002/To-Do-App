@@ -1,10 +1,18 @@
 package com.example.to_doapp.HomePage;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +51,8 @@ public class AddNewTask extends BottomSheetDialogFragment {
     DocumentReference db;
     FirebaseUser user;
     private FirebaseAuth mAuth;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +122,6 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 String name = taskName.getText().toString().trim();
                 String time = taskTime.getText().toString().trim();
                 String date = taskDate.getText().toString().trim();
-
 //                String time = utime[0];
 //                String date = udate[0];
 
@@ -121,11 +130,53 @@ public class AddNewTask extends BottomSheetDialogFragment {
                     Toast.makeText(getContext(), "No field can be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Log.e("AlarmTime",date+" "+time);
+                setAlarm(name, date, time);
                 addToDB(name, time, date, false);
                 dismiss();
             }
         });
         return view;
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "taskReminder";
+            String desc = "Channel to receive alarm for task";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("task", name, importance);
+            channel.setDescription(desc);
+
+            NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void setAlarm(String name, String date, String time) {
+        Calendar cal = Calendar.getInstance();
+        String[] d = date.split("\\.");
+        String[] t = time.split(":");
+
+        int day = Integer.parseInt(d[0]);
+        int month = Integer.parseInt(d[1]);
+        int year = Integer.parseInt(d[2]);
+
+        int hr = Integer.parseInt(t[0]);
+        int min = Integer.parseInt(t[1]);
+
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        cal.set(Calendar.HOUR_OF_DAY, hr);
+        cal.set(Calendar.MINUTE, min);
+
+        alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        intent.putExtra("name", name);
+
+        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, 3, pendingIntent);
     }
 
     private void addToDB(String name, String time, String date, boolean status) {

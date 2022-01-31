@@ -193,19 +193,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         db.collection("tasks") // name of the collection
                 .document(id) // task id
-                .update(task)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(context, "Task Added Successfully!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Error occurred. Please try again later.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .update(task);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

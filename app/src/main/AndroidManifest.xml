@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToDoApp">
         <activity
-            android:name=".SplashScreen"
+            android:name=".SplashScreen.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +24,7 @@
             android:name=".HomePage.MainActivity"
             android:exported="false">
         </activity>
+        <receiver android:name=".HomePage.AlarmReceiver"/>
     </application>
 
 </manifest>

@@ -6,118 +6,156 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="3dp">
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="16dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp">
-
         <LinearLayout
-            android:id="@+id/checkLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <CheckBox
-                android:id="@+id/taskCheckBox"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="match_parent">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/holobluedark"
-                android:fontFamily="sans-serif-thin"
-                android:maxLines="1"
-                android:paddingStart="10dp"
-                android:layout_marginEnd="20dp"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tool:text="Sample Task"/>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            </View>
-            <ImageButton
-                android:id="@+id/taskDeleteBtn"
+                android:gravity="bottom"
+                android:fontFamily="sans-serif-medium"
+                android:alpha="0.5"
+                android:layout_gravity="center_horizontal"
+                android:rotation="-90"
+                android:text="hours"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/remainingTaskTime_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_baseline_delete_24"
-                android:background="@android:color/transparent"/>
+                android:layout_gravity="center_horizontal"
+                android:gravity="bottom"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:alpha="0.5"
+                android:rotation="-90"
+                android:text="2"
+                android:textColor="@color/black" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/taskDesc_tv"
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/holobluedark"
+            android:alpha="0.6"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/checkLayout"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="8dp"
+            android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
-            android:maxLines="2"
-            android:lines="2"
-            android:fontFamily="sans-serif-thin"
-            android:text="Task Description"
-            android:textColor="@color/black"
-            android:textSize="16sp"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/taskDesc_tv"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/taskDate_tv"
-                android:layout_width="wrap_content"
+            android:paddingStart="10dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/checkLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Date"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/taskCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/holobluedark"
+                    android:fontFamily="sans-serif-thin"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tool:text="Sample Task"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                </View>
+                <ImageButton
+                    android:id="@+id/taskDeleteBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_baseline_delete_24"
+                    android:background="@android:color/transparent"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/taskDesc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/checkLayout"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:lines="2"
+                android:maxLines="2"
                 android:paddingStart="8dp"
-                android:textSize="16sp"
+                android:paddingBottom="4dp"
+                android:text="Task Description"
                 android:textColor="@color/black"
-                android:fontFamily="sans-serif-light">
-            </TextView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:fontFamily="sans-serif-light">
-            </TextView>
-            <TextView
-                android:id="@+id/taskTime_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:fontFamily="sans-serif-light">
-            </TextView>
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            </View>
-            <TextView
-                android:textAllCaps="true"
-                android:id="@+id/taskStatus_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="10dp"
-                android:textSize="16sp"
-                android:textColor="@color/holobluedark"
-                android:fontFamily="sans-serif-light">
-            </TextView>
-        </LinearLayout>
+                android:textSize="17sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/taskDesc_tv"
+                android:orientation="horizontal">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/taskDate_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="8dp"
+                    android:text="Date"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="-"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"></TextView>
+
+                <TextView
+                    android:id="@+id/taskTime_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Time"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"></TextView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"></View>
+
+                <TextView
+                    android:id="@+id/taskStatus_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingEnd="10dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/holobluedark"
+                    android:textSize="14sp"></TextView>
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

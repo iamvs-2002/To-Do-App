@@ -2,6 +2,7 @@ package com.example.to_doapp.HomePage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -45,11 +47,13 @@ public class MainActivity extends AppCompatActivity{
     RecyclerView taskRecyclerView;
     public static TaskAdapter taskAdapter;
     public static List<TaskModel> taskList;
-    ExtendedFloatingActionButton floatingActionButton;
+    AppCompatButton addnewTaskBtn;
     static FirebaseUser user;
     private FirebaseAuth mAuth;
     public static LottieAnimationView animationView;
     SwipeRefreshLayout swipeRefreshLayout;
+
+    public static TextView taskCount_tv;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -71,10 +75,12 @@ public class MainActivity extends AppCompatActivity{
         taskAdapter = new TaskAdapter(this, MainActivity.this);
         taskRecyclerView.setAdapter(taskAdapter);
 
-        floatingActionButton = findViewById(R.id.addTask_fab);
+        addnewTaskBtn = findViewById(R.id.addTask_btn);
         animationView = findViewById(R.id.lottie_empty);
+        taskCount_tv = findViewById(R.id.taskCount_tv);
 
         taskList = addTasks();
+        taskCount_tv.setText(String.valueOf(taskList.size()));
         Collections.reverse(taskList);
         taskAdapter.setTasks(taskList);
         taskAdapter.notifyDataSetChanged();
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity{
         });
 
         // To add a new Task
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        addnewTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AddNewTask().show(getSupportFragmentManager(), AddNewTask.TAG);

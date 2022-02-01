@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,10 +68,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         TextView taskDesc = holder.taskDesc;
         TextView taskTime = holder.taskTime;
         TextView taskStatus = holder.taskStatus;
+        TextView taskRemTime = holder.taskRemTime;
         ImageButton taskDelete = holder.taskDelete;
 
         taskCheckBox.setText(taskModel.getName());
         taskDate.setText(taskModel.getDate());
+        try {
+            taskRemTime.setText(getRemTime(taskModel.getDate(), taskModel.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         taskDesc.setText(taskModel.getDesc());
         taskTime.setText(taskModel.getTime());
         final Boolean[] status = {taskModel.getStatus()};
@@ -100,6 +107,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 String time = taskModel.getTime();
 
                 if(isChecked){
+                    taskRemTime.setText("0");
                     boolean s = true;
                     status[0] = s;
                     taskModel.setStatus(s);
@@ -107,6 +115,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     updateDB(id,name,desc,time,date,s);
                 }
                 else{
+                    String remTime = "0";
+                    try {
+                        remTime = getRemTime(date, time);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    taskRemTime.setText(remTime);
                     boolean s = false;
                     status[0] = s;
                     taskModel.setStatus(s);
@@ -124,42 +139,55 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         });
     }
 
+    private String getRemTime(String date, String time) throws ParseException{
+        String currentDateTime = getCurrentDateTime();
+
+        Log.e("Diff", currentDateTime);
+        SimpleDateFormat simpleDateFormat
+                = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
+
+        String t = date+"-"+time;
+        Date d1 = simpleDateFormat.parse(t);
+        Date d2 = simpleDateFormat.parse(currentDateTime);
+
+        Log.e("Diff", d1+" "+d2);
+
+
+        long differenceInMilliSeconds
+                = Math.abs(d2.getTime() - d1.getTime());
+
+        Log.e("Diff",d1.getTime()+" "+d2.getTime());
+
+        // Calculating the difference in Hours
+        long differenceInHours = (differenceInMilliSeconds / (60 * 60 * 1000));
+
+        Log.e("Diff", String.valueOf(differenceInHours));
+
+        if (differenceInHours <= 5)
+            return String.valueOf(differenceInHours);
+        else
+            return "5+";
+    }
+
     public boolean checkTime(String date, String time) throws ParseException {
         String currentDateTime = getCurrentDateTime();
-        String[] s = currentDateTime.split("-");
-        String cdate = s[0].trim();
-        String ctime = s[1].trim();
 
         SimpleDateFormat simpleDateFormat
-                = new SimpleDateFormat("dd.mm.yyyy");
-        Date d1 = simpleDateFormat.parse(cdate);
-        Date d2 = simpleDateFormat.parse(date);
+                = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
 
-        if(d1.after(d2)) {
-            return false;
-        }
-        else {
-            SimpleDateFormat simpleDateFormathr
-                    = new SimpleDateFormat("HH:mm");
 
-            // Parsing the Time Period
-            Date date1 = simpleDateFormathr.parse(ctime);
-            Date date2 = simpleDateFormathr.parse(time);
+        String t = date+"-"+time;
+        Date d1 = simpleDateFormat.parse(t);
+        Date d2 = simpleDateFormat.parse(currentDateTime);
 
-            if(date1.after(date2))
-                return false;
+        long differenceInMilliSeconds
+                = Math.abs(d1.getTime() - d2.getTime());
 
-            // Calculating the difference in milliseconds
-            long differenceInMilliSeconds
-                    = Math.abs(date2.getTime() - date1.getTime());
+        // Calculating the difference in Hours
+        long differenceInHours
+                = (differenceInMilliSeconds / (60 * 60 * 1000));
 
-            // Calculating the difference in Hours
-            long differenceInHours
-                    = (differenceInMilliSeconds / (60 * 60 * 1000))
-                    % 24;
-
-            return (differenceInHours <= 1);
-        }
+        return (differenceInHours <= 5);
     }
 
     public static String getCurrentDateTime(){
@@ -171,6 +199,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         int size = taskList.size();
+
+        MainActivity.taskCount_tv.setText((String.valueOf(size)));
+
         if (size==0)
             MainActivity.animationView.setVisibility(View.VISIBLE);
         else
@@ -230,7 +261,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox taskCheckBox;
-        TextView taskDate, taskTime, taskStatus, taskDesc;
+        TextView taskDate, taskTime, taskStatus, taskDesc, taskRemTime;
         ImageButton taskDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -239,6 +270,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             taskCheckBox = itemView.findViewById(R.id.taskCheckBox);
             taskDate = itemView.findViewById(R.id.taskDate_tv);
             taskDesc = itemView.findViewById(R.id.taskDesc_tv);
+            taskRemTime = itemView.findViewById(R.id.remainingTaskTime_tv);
             taskTime = itemView.findViewById(R.id.taskTime_tv);
             taskStatus = itemView.findViewById(R.id.taskStatus_tv);
             taskDelete = itemView.findViewById(R.id.taskDeleteBtn);

@@ -1,7 +1,9 @@
 package com.example.to_doapp.HomePage;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -32,17 +34,22 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class AddNewTask extends BottomSheetDialogFragment {
     public static final String TAG = "ActionBottomDialog";
@@ -77,28 +84,36 @@ public class AddNewTask extends BottomSheetDialogFragment {
         final String[] utime = new String[1];
         final String[] udate = new String[1];
 
+        final long today = MaterialDatePicker.todayInUtcMilliseconds();
+
+        MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        materialDateBuilder.setTitleText("SELECT A DATE");
+        materialDateBuilder.setSelection(today);
+        final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
+
+
         // Date Picker
         taskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                int mYear = c.get(Calendar.YEAR);
-                int mMonth = c.get(Calendar.MONTH);
-                int mDay = c.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                udate[0] = (dayOfMonth + "." + (monthOfYear + 1) + "." + year);
-                                taskDate.setText(udate[0]);
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
+                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
             }
         });
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                calendar.setTimeInMillis((long)selection);
+                SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                String formattedDate  = format.format(calendar.getTime());
+
+
+                udate[0] = formattedDate;
+                taskDate.setText(udate[0]);
+            }
+        });
+
+
         // Time Picker
         taskTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +125,11 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        utime[0] = ( selectedHour + ":" + selectedMinute);
+                        utime[0] = String.format("%02d:%02d", selectedHour, selectedMinute);
                         taskTime.setText(utime[0]);
                     }
                 }, hour, minute, true);
-                mTimePicker.setTitle("Select Time");
+                // mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
         });

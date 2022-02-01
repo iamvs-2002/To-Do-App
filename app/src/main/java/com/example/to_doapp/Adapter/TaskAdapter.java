@@ -152,6 +152,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         Log.e("Diff", d1+" "+d2);
 
+        if (d1.before(d2))
+            return "0";
 
         long differenceInMilliSeconds
                 = Math.abs(d2.getTime() - d1.getTime());
@@ -159,7 +161,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Log.e("Diff",d1.getTime()+" "+d2.getTime());
 
         // Calculating the difference in Hours
-        long differenceInHours = (differenceInMilliSeconds / (60 * 60 * 1000));
+        long differenceInHours = (long) Math.ceil(differenceInMilliSeconds / (60 * 60 * 1000));
 
         Log.e("Diff", String.valueOf(differenceInHours));
 
@@ -175,17 +177,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         SimpleDateFormat simpleDateFormat
                 = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
 
-
         String t = date+"-"+time;
+
+        Log.e("Diff", t+" "+currentDateTime);
+
         Date d1 = simpleDateFormat.parse(t);
         Date d2 = simpleDateFormat.parse(currentDateTime);
+
+        if (d1.before(d2))
+            return false;
 
         long differenceInMilliSeconds
                 = Math.abs(d1.getTime() - d2.getTime());
 
         // Calculating the difference in Hours
-        long differenceInHours
-                = (differenceInMilliSeconds / (60 * 60 * 1000));
+        long differenceInHours = (long) Math.ceil(differenceInMilliSeconds / (60 * 60 * 1000));
 
         return (differenceInHours <= 5);
     }

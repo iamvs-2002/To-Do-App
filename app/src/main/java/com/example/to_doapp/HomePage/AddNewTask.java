@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -60,6 +61,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
     private FirebaseAuth mAuth;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    String format;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +109,6 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
                 String formattedDate  = format.format(calendar.getTime());
 
-
                 udate[0] = formattedDate;
                 taskDate.setText(udate[0]);
             }
@@ -125,6 +126,22 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        if (selectedHour==0)
+                            selectedHour = 24;
+//                        if (selectedHour == 0) {
+//                            selectedHour += 12;
+//                            format = "am";
+//                        }
+//                        else if (selectedHour == 12) {
+//                            format = "pm";
+//                        }
+//                        else if (selectedHour > 12) {
+//                            selectedHour -= 12;
+//                            format = "pm";
+//                        }
+//                        else {
+//                            format = "am";
+//                        }
                         utime[0] = String.format("%02d:%02d", selectedHour, selectedMinute);
                         taskTime.setText(utime[0]);
                     }
@@ -151,7 +168,8 @@ public class AddNewTask extends BottomSheetDialogFragment {
                     return;
                 }
                 Log.e("AlarmTime",date+" "+time);
-                setAlarm(name, desc, date, time);
+
+                // setAlarm(name, desc, date, time);
                 addToDB(name, desc, time, date, false);
                 dismiss();
             }
@@ -161,9 +179,32 @@ public class AddNewTask extends BottomSheetDialogFragment {
 
     // Set alarm when a task is added to the list
     private void setAlarm(String name, String desc, String date, String time) {
+        SimpleDateFormat simpleDateFormat
+                = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
+
+        String t = date+"-"+time;
+
+        String currentDateTime = getCurrentDateTime();
+
+
+        try{
+            Date d1 = simpleDateFormat.parse(t);
+            Date d2 = simpleDateFormat.parse(currentDateTime);
+
+            if (d1.before(d2))
+                return;
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, d1.getYear());
+            cal.set(Calendar.MONTH, d1.getMonth());
+            cal.set(Calendar.DAY_OF_MONTH, d1.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, d1.getHours());
+            cal.set(Calendar.MINUTE, d1.getMinutes());
+
+        /*
         Calendar cal = Calendar.getInstance();
-        String[] d = date.split("\\.");
-        String[] t = time.split(":");
+        //String[] d = date.split("\\.");
+        //String[] t = time.split(":");
 
         int day = Integer.parseInt(d[0]);
         int month = Integer.parseInt(d[1]);
@@ -177,15 +218,28 @@ public class AddNewTask extends BottomSheetDialogFragment {
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.HOUR_OF_DAY, hr);
         cal.set(Calendar.MINUTE, min);
+        */
 
-        alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        intent.putExtra("name", name);
-        intent.putExtra("desc", desc);
+            alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(getContext(), AlarmReceiver.class);
+            intent.putExtra("name", name);
+            intent.putExtra("desc", desc);
 
-        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+            pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+
+            // Toast.makeText(getContext(), "Created alarm", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public static String getCurrentDateTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy'-'kk:mm a");
+        String currentDateandTime = sdf.format(new Date());
+        return currentDateandTime;
     }
 
     // Add Task to DataBase

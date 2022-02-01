@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +38,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -81,7 +86,8 @@ public class MainActivity extends AppCompatActivity{
 
         taskList = addTasks();
         taskCount_tv.setText(String.valueOf(taskList.size()));
-        Collections.reverse(taskList);
+        //Collections.reverse(taskList);
+        Collections.sort(taskList, new TimeComparator());
         taskAdapter.setTasks(taskList);
         taskAdapter.notifyDataSetChanged();
 
@@ -92,7 +98,8 @@ public class MainActivity extends AppCompatActivity{
                 // Add the tasks again, so as to update
                 // The "UPCOMING" status for each task
                 taskList = addTasks();
-                Collections.reverse(taskList);
+                //Collections.reverse(taskList);
+                Collections.sort(taskList, new TimeComparator());
                 taskAdapter.setTasks(taskList);
                 taskAdapter.notifyDataSetChanged();
                 taskRecyclerView.setAdapter(taskAdapter);
@@ -100,7 +107,6 @@ public class MainActivity extends AppCompatActivity{
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
         // To add a new Task
         addnewTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,5 +165,42 @@ public class MainActivity extends AppCompatActivity{
             animationView.setVisibility(View.GONE);
 
         return taskList;
+    }
+}
+class TimeComparator implements Comparator {
+    public int compare(Object o1, Object o2){
+        TaskModel t1 = (TaskModel) o1;
+        TaskModel t2 = (TaskModel) o2;
+
+        String date1 = t1.getDate()+"-"+t1.getTime();
+        String date2 = t2.getDate()+"-"+t2.getTime();
+
+        String currentDateTime = getCurrentDateTime();
+
+        Log.e("Diff", currentDateTime);
+        SimpleDateFormat simpleDateFormat
+                = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
+
+        try {
+            Date d1 = simpleDateFormat.parse(date1);
+            Date d2 = simpleDateFormat.parse(date2);
+
+            if (d1.equals(d2))
+                return 0;
+            else if(d1.before(d2))
+                return -1;
+            else
+                return 1;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    public static String getCurrentDateTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+        return currentDateandTime;
     }
 }

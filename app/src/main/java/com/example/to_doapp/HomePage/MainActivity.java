@@ -134,11 +134,12 @@ public class MainActivity extends AppCompatActivity{
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = (String) document .get("id");
                                 String name = (String) document .get("name");
+                                String desc = (String) document .get("desc");
                                 String date = (String) document .get("date");
                                 String time = (String) document .get("time");
                                 Boolean status = (Boolean) document .get("status");
 
-                                TaskModel t = new TaskModel(id, name, status, date, time);
+                                TaskModel t = new TaskModel(id, name, desc, status, date, time);
                                 taskList.add(t);
                                 taskAdapter.notifyDataSetChanged();
                             }

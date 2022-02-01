@@ -19,9 +19,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
 
         String name = intent.getStringExtra("name");
+        String desc = intent.getStringExtra("desc");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "task")
                 .setSmallIcon(R.mipmap.icon)
                 .setContentTitle(name)
+                .setContentText(desc)
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

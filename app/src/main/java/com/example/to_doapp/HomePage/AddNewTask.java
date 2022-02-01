@@ -46,7 +46,7 @@ import java.util.Map;
 
 public class AddNewTask extends BottomSheetDialogFragment {
     public static final String TAG = "ActionBottomDialog";
-    private TextInputEditText taskName, taskDate, taskTime;
+    private TextInputEditText taskName, taskDate, taskTime, taskDesc;
     private AppCompatButton saveBtn;
     DocumentReference db;
     FirebaseUser user;
@@ -69,6 +69,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         user = mAuth.getCurrentUser();
 
         taskName = view.findViewById(R.id.task_input_name);
+        taskDesc = view.findViewById(R.id.task_input_desc);
         taskDate = view.findViewById(R.id.task_input_date);
         taskTime = view.findViewById(R.id.task_input_time);
         saveBtn = view.findViewById(R.id.task_input_save);
@@ -123,19 +124,20 @@ public class AddNewTask extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 String name = taskName.getText().toString().trim();
+                String desc = taskDesc.getText().toString().trim();
                 String time = taskTime.getText().toString().trim();
                 String date = taskDate.getText().toString().trim();
 //                String time = utime[0];
 //                String date = udate[0];
 
-                if(name.equals("") || time.equals("") || date.equals(""))
+                if(name.equals("") || desc.equals("") || time.equals("") || date.equals(""))
                 {
                     Toast.makeText(getContext(), "No field can be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Log.e("AlarmTime",date+" "+time);
-                setAlarm(name, date, time);
-                addToDB(name, time, date, false);
+                setAlarm(name, desc, date, time);
+                addToDB(name, desc, time, date, false);
                 dismiss();
             }
         });
@@ -143,7 +145,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
     }
 
     // Set alarm when a task is added to the list
-    private void setAlarm(String name, String date, String time) {
+    private void setAlarm(String name, String desc, String date, String time) {
         Calendar cal = Calendar.getInstance();
         String[] d = date.split("\\.");
         String[] t = time.split(":");
@@ -164,6 +166,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getContext(), AlarmReceiver.class);
         intent.putExtra("name", name);
+        intent.putExtra("desc", desc);
 
         pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
 
@@ -171,7 +174,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
     }
 
     // Add Task to DataBase
-    private void addToDB(String name, String time, String date, boolean status) {
+    private void addToDB(String name, String desc, String time, String date, boolean status) {
         db = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
         String id = db.collection("tasks").document().getId();
 
@@ -179,6 +182,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
         task.put("id", id);
         task.put("name", name);
         task.put("date", date);
+        task.put("desc", desc);
         task.put("time", time);
         task.put("status", status);
 
@@ -186,7 +190,7 @@ public class AddNewTask extends BottomSheetDialogFragment {
                 .document(id)
                 .set(task);
 
-        TaskModel t = new TaskModel(id, name, status, date, time);
+        TaskModel t = new TaskModel(id, name, desc, status, date, time);
         MainActivity.taskList.add(t);
         MainActivity.taskAdapter.notifyDataSetChanged();
         MainActivity.animationView.setVisibility(View.GONE);

@@ -3,6 +3,7 @@ package com.example.to_doapp.Model;
 public class TaskModel {
     private String id;
     private String name;
+    private String desc;
     private Boolean status;
     private String date;
     private String time;
@@ -10,12 +11,21 @@ public class TaskModel {
     public TaskModel() {
     }
 
-    public TaskModel(String id, String name, Boolean status, String date, String time) {
+    public TaskModel(String id, String name, String desc, Boolean status, String date, String time) {
         this.id = id;
         this.name = name;
+        this.desc = desc;
         this.status = status;
         this.date = date;
         this.time = time;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public String getId() {

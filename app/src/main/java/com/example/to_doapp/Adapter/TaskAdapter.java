@@ -64,12 +64,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         CheckBox taskCheckBox = holder.taskCheckBox;
         TextView taskDate = holder.taskDate;
+        TextView taskDesc = holder.taskDesc;
         TextView taskTime = holder.taskTime;
         TextView taskStatus = holder.taskStatus;
         ImageButton taskDelete = holder.taskDelete;
 
         taskCheckBox.setText(taskModel.getName());
         taskDate.setText(taskModel.getDate());
+        taskDesc.setText(taskModel.getDesc());
         taskTime.setText(taskModel.getTime());
         final Boolean[] status = {taskModel.getStatus()};
         taskCheckBox.setChecked(status[0]);
@@ -93,6 +95,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 String id = taskModel.getId();
                 String name = taskModel.getName();
+                String desc = taskModel.getDesc();
                 String date = taskModel.getDate();
                 String time = taskModel.getTime();
 
@@ -101,7 +104,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     status[0] = s;
                     taskModel.setStatus(s);
                     taskStatus.setText("");
-                    updateDB(id,name,time,date,s);
+                    updateDB(id,name,desc,time,date,s);
                 }
                 else{
                     boolean s = false;
@@ -115,7 +118,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    updateDB(id,name,time,date,s);
+                    updateDB(id,name,desc,time,date,s);
                 }
             }
         });
@@ -210,11 +213,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
     }
 
-    private void updateDB(String id, String name, String time, String date, boolean status) {
+    private void updateDB(String id, String name, String desc, String time, String date, boolean status) {
         db = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
         Map<String, Object> task = new HashMap<>();
         task.put("id", id);
         task.put("name", name);
+        task.put("desc", desc);
         task.put("date", date);
         task.put("time", time);
         task.put("status", status);
@@ -226,7 +230,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox taskCheckBox;
-        TextView taskDate, taskTime, taskStatus;
+        TextView taskDate, taskTime, taskStatus, taskDesc;
         ImageButton taskDelete;
 
         public ViewHolder(@NonNull View itemView) {
@@ -234,6 +238,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             taskCheckBox = itemView.findViewById(R.id.taskCheckBox);
             taskDate = itemView.findViewById(R.id.taskDate_tv);
+            taskDesc = itemView.findViewById(R.id.taskDesc_tv);
             taskTime = itemView.findViewById(R.id.taskTime_tv);
             taskStatus = itemView.findViewById(R.id.taskStatus_tv);
             taskDelete = itemView.findViewById(R.id.taskDeleteBtn);

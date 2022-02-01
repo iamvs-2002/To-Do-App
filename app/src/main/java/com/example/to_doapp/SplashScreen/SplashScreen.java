@@ -30,12 +30,17 @@ public class SplashScreen extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
-        // If user is already authenticated
-        if(user != null)
-            goToMainActivity();
-        else
-            signInAnonymously();
-
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // If user is already authenticated
+                if(user != null)
+                    goToMainActivity();
+                else
+                    signInAnonymously();
+            }
+        }, DELAY);
     }
 
     private void signInAnonymously() {
@@ -45,13 +50,7 @@ public class SplashScreen extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    goToMainActivity();
-                                }
-                            }, DELAY);
+                            goToMainActivity();
 
                         } else {
                             // If sign in fails, display a message to the user.

@@ -41,6 +41,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_input_name"
                     android:layout_width="match_parent"
+                    android:maxLength="12"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"
@@ -58,6 +59,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/task_input_desc"
                     android:layout_width="match_parent"
+                    android:maxLines="2"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
                     android:textColor="@color/black"

@@ -12,6 +12,7 @@
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/mainactivity_bg.xml" value="0.26614583333333336" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/name.xml" value="0.26205128205128203" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/time.xml" value="0.26205128205128203" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
@@ -19,7 +20,7 @@
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/add_task_bottomsheet.xml" value="0.2" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/editTaskAlertDialog.xml" value="0.25" />
         <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/edittaskalertdialog.xml" value="0.176" />
-        <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/task_item.xml" value="0.6" />
+        <entry key="..\:/Projects/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/task_item.xml" value="0.536" />
       </map>
     </option>
   </component>

@@ -128,20 +128,6 @@ public class AddNewTask extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if (selectedHour==0)
                             selectedHour = 24;
-//                        if (selectedHour == 0) {
-//                            selectedHour += 12;
-//                            format = "am";
-//                        }
-//                        else if (selectedHour == 12) {
-//                            format = "pm";
-//                        }
-//                        else if (selectedHour > 12) {
-//                            selectedHour -= 12;
-//                            format = "pm";
-//                        }
-//                        else {
-//                            format = "am";
-//                        }
                         utime[0] = String.format("%02d:%02d", selectedHour, selectedMinute);
                         taskTime.setText(utime[0]);
                     }

@@ -83,13 +83,29 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
 
-                <ImageButton
-                    android:id="@+id/taskDeleteBtn"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_baseline_delete_24" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/taskEditBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_edit_24" />
+                    <ImageButton
+                        android:layout_marginStart="4dp"
+                        android:id="@+id/taskDeleteBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_baseline_delete_24" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -97,9 +113,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/checkLayout"
-                android:layout_marginEnd="8dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
+                android:paddingEnd="4dp"
                 android:lines="2"
                 android:maxLines="2"
                 android:paddingStart="8dp"

@@ -1,5 +1,5 @@
 # To-Do-App
-To-Do-App is a task management android app to help you stay organized and manage your day-to-day.
+To-Do-App is a task management android app to help you stay organized and manage your day-to-day tasks.
 
 ### To-Do-App includes many features:
 * Add tasks, set reminders
